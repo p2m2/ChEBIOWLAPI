@@ -43,7 +43,7 @@ case object ChEBIOwlRequest  {
    */
 
   def discovery(path:String) : SWDiscovery = {
-    SWDiscovery(SWDiscoveryConfiguration().urlFile(path))
+    SWDiscovery(SWDiscoveryConfiguration().localFile(path,"text/rdf-xml"))
       .prefix("chebi","http://purl.obolibrary.org/obo/chebi/")
       .something("compound")
         .isSubjectOf(URI("chebi:monoisotopicmass"),"v")
@@ -54,7 +54,7 @@ case object ChEBIOwlRequest  {
   def get(id: String)(implicit path: String="https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz", tempDir: String="./ChEBIOwl") = {
     load(path,tempDir)
     println("REQUEST................")
-    val r = Await.ready(discovery(tempDir+"chebi.owl").select(Seq("v")).limit(10).raw, Duration.Inf)
+    val r = Await.ready(discovery(tempDir+"/chebi.owl").select(Seq("v")).limit(10).commit().raw, Duration.Inf)
 
      println(r)
     println("END")
